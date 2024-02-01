@@ -70,7 +70,7 @@ This base network consists of:
        ```
    - Review and create the template.
 
-2.**Create an Auto Scaling Group (ASG)**
+2. **Create an Auto Scaling Group (ASG)**
    - Navigate to the ASG console from the sidebar menu and create a new group.
    - Select the "3tier-webapp-vpc" along with the two private subnets.
 
@@ -85,8 +85,8 @@ This base network consists of:
          ```
          ping PRIVATE_IPV4_ADDRESS
          ```
-4.**Create a Bastion host**
-  - BH
+4. **Create a Bastion host**
+   - BH
 
 
 
