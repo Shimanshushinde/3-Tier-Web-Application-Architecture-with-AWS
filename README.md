@@ -1,6 +1,14 @@
-# Building a 3-tier web application architecture with AWS
+# Deploying a 3-Tier Web Application Architecture With AWS
 Deploying a three-tier web application on AWS involves setting up three layers: presentation (frontend), logic tier (backend), and data tier (database).
 This guide to deploying such an application on AWS using commonly used services like EC2, RDS,ELB, and more.
+
+**Three-tier architecture is a software architecture pattern that separates an application into three layers.**
+
+🔸Presentation layer ➡️ handles user interaction.
+
+🔸Application layer(backend logic) ➡️ processes business logic and data processing.
+
+🔸Data layer (database) ➡️ manages data storage and retrieval.
 
 ## Prerequisites
 
@@ -24,17 +32,17 @@ This base network consists of:
    - 1 public route table that connects the public subnets to an internet gateway.
    - 1 private route table that will connect the Application Tier private subnets and a NAT gateway.
    - Make sure "Enable auto-assign public IPv4 address" for BOTH public subnets.
-   - public-rtb to serve as the main table, so select the public-rtb from the "Route tables".
+3. **Create an Internet Gateway**
+   - Attach to VPC     
 3. **Create a NAT Gateway**
    - Navigate to "NAT Gateways" section and click on "create NAT gateway".
    - Select one of the public subnets, allocate an elastic IP, and create.
-4. **Configure private route tables**
-   - Select any one of the private route tables, associate this table with all four private subnets.
-   - add a new route to NAT gateway and save it.
-  
+4. **Configure route tables**
+   - Associate the public route table with "Internet Gateway".
+   - Associate the private route table with "NAT Gateway".
 ### Step 2: Tier 1: Web tier (Frontend)
-1. **Create a web server launch template**
-   - In the EC2 console, navigate to "Launch templates" under the "Instances" sidebar menu.
+1. **Create a web server Launch Template**
+   - In the EC2 console, create "Launch templates".
      - AMI: Amazon 2 Linux
      - Instance type: t2.micro (1GB – Free Tier)
      - A new or existing key pair
@@ -42,28 +50,21 @@ This base network consists of:
    - Under ‘Advanced details >[User Data](https://github.com/Shimanshushinde/3-Tier-Web-Application-Architecture-with-AWS/blob/e687d4a2beda1a7585e19ee079ef285c3787610e/User%20Data)
 
 2. **Create an Auto scaling group (ASG)**
-   - Navigate to the ASG console from the sidebar menu and create a new group.
-   - Select the "3tier-webapp-vpc" along with the two public subnets.
+   - Navigate to the ASG console, select "Launch Template" and create a new group.
+   - Select the "VPC" along with the two public subnets.
 
 3. **Application load balancer (ALB)**
    - ALB to be "Internet-facing," needs to 'listen’ over HTTP on port 80 and a target group that routes to ec2 instance.
-   - add a scaling policy > Target Tracking Policy (Average CPU Utilization at 50%).
-   - Group size:
-      - Desired capacity: 2
-      - Minimum capacity: 2
-      - Maximum capacity: 5
+   - Add a scaling policy > Target Tracking Policy (Average CPU Utilization at 50%).
+   - Group size:- Desired capacity: 2
    - Review the ASG settings and create the group
-   - To see ALB is properly routing traffic, let’s go to its public IP address and past in Browser.
-
-4. **Use SSH Connection To Connect To The Web Server**
-   - SSH into our EC2 server, use putty as ssh client.(Remember, this is the ‘Presentation’ layer, where our users will directly interact with our app.)
   
 ### Step 3: Tier 2: Application tier (Backend)
-1. **Create an application server launch template**
-   - In the EC2 console, navigate to "Launch templates" under the "Instances" sidebar menu.
+1. **Create an application server Launch Template**
+   - In the EC2 console, Create a "Launch templates".
       - (Amazon 2 Linux, t2.micro-1GB, same key pair).
-   - create a new security group to allow all ICMP–IPv4 from the 3tier-webServer-SG, which allows us to ping the application server from our web server.
-   - In the ‘User data’ field under ‘Advanced details
+   - create a new security group to allow "All ICMP–IPv4" & "SSH" from the WebServer-SG, and "MYSQL" from Database-SG.
+   - Under ‘Advanced details, User Data.
        ```
        #!/bin/bash
        sudo yum install mysql -y
@@ -71,22 +72,39 @@ This base network consists of:
    - Review and create the template.
 
 2. **Create an Auto Scaling Group (ASG)**
-   - Navigate to the ASG console from the sidebar menu and create a new group.
-   - Select the "3tier-webapp-vpc" along with the two private subnets.
+   - Navigate to the ASG console, select "Launch Template" and create a new group.
+   - Select the "VPC" along with the two private subnets.
 
 3. **Application Load Balancer (ALB)**
    - This time, we want the ALB to be "Internal," since we’re routing traffic from our Web Tier, not the Internet.
-   - Confirm connectivity from the Web Tier.
-     - SSH into the web server EC2
-        ```sh
+   - Group size:- Desired capacity: 2
+   - Review the ASG settings and create the group
+
+### Step 4: Tier 3: Database tier (Data storage & retrieval)
+1. **Create a DB subnet group**
+   - Select VPC, Select at least 2 availability zones and 2 subnets for Database and Click on create.
+    
+2. **Create an RDS database**
+   - Under the RDS console and Choose a database creation "Standard Create" with a MySQL engine.
+   - Choose Template "Production or Dev/Test".
+   - Deployment options "Multi-AZ DB instance".
+   - Type the database name and password
+   - Select instance type and Storage.
+    
+3. **Create a database security group**
+   - Create a new security group called, "Database-SG." Make sure the VPC is selected.
+   - Add inbound AND outbound rules that allow MySQL requests to and from the application servers on port 3306.
+   - Do the same for the AppServer-SG.
+
+
+### STEP 5: Test Your Application
+1. **Use SSH Connection To Connect To The Web Server**
+   - SSH into our EC2 server, use putty as ssh client.(Remember, this is the ‘Presentation’ layer, where our users will directly interact with our app.)
+  
+    ```sh
         ssh -i "webServer_key.ppk" ec2-user@ec2-54-209-250-120.compute-1.amazonaws.com
         ```
      - Ping the private IP address of one of the app server EC2s.
          ```
          ping PRIVATE_IPV4_ADDRESS
          ```
-4. **Create a Bastion host**
-   - BH
-
-
-
