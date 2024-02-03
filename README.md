@@ -3,6 +3,7 @@ Deploying a three-tier web application on AWS involves setting up three layers: 
 This guide to deploying such an application on AWS using commonly used services like EC2,VPC,RDS,ELB, and more.
 
 # Architecture of the Project
+![3tier-architecture1](https://github.com/Shimanshushinde/3-Tier-Web-Application-Architecture-with-AWS/assets/137445826/956b9025-fbba-4631-bd83-cdd8a36cae1e)
 
 ## Prerequisites
 
