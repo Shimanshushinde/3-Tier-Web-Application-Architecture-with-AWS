@@ -1,14 +1,8 @@
 # Deploying a 3-Tier Web Application Architecture With AWS
 Deploying a three-tier web application on AWS involves setting up three layers: presentation (frontend), logic tier (backend), and data tier (database).
-This guide to deploying such an application on AWS using commonly used services like EC2, RDS,ELB, and more.
+This guide to deploying such an application on AWS using commonly used services like EC2,VPC,RDS,ELB, and more.
 
-**Three-tier architecture is a software architecture pattern that separates an application into three layers.**
-
-🔸Presentation layer ➡️ handles user interaction.
-
-🔸Application layer(backend logic) ➡️ processes business logic and data processing.
-
-🔸Data layer (database) ➡️ manages data storage and retrieval.
+# Architecture of the Project
 
 ## Prerequisites
 
@@ -44,7 +38,7 @@ This base network consists of:
 1. **Create a web server Launch Template**
    - In the EC2 console, create "Launch templates".
      - AMI: Amazon 2 Linux
-     - Instance type: t2.micro (1GB – Free Tier)
+     - Instance type: t2.micro 
      - A new or existing key pair
    - create a new security group with inbound SSH, HTTP, and HTTPS rules.
    - Under ‘Advanced details >[User Data](https://github.com/Shimanshushinde/3-Tier-Web-Application-Architecture-with-AWS/blob/e687d4a2beda1a7585e19ee079ef285c3787610e/User%20Data)
@@ -124,5 +118,28 @@ This base network consists of:
    ```
    mysql -h <YOUR_DB_ENDPOINT> -P 3306 -u <YOUR_DB_USERNAME> -p
    ```
-**We successfully connected to our database from our application server!**
+   **successfully connected to our database from our application server!**
+
+### Step 6: Documentation
+
+1. **Architecture documentation:**
+
+    #### Architecture Overview:
+
+    Our deployment of 3tier Web Application architecture utilizes the following components:
+
+    - **Frontend Service:** Web/Presentation Tier: Houses the user-facing elements of the application, such as web servers and the interface/frontend.
+    - **Backend Service:** Application Tier: Houses the backend and application source code needed to process data and run functions.
+    - **Database service:** Data Tier: Houses and manages the application data. Often where the databases are stored.
+    - **AWS Services:** Used services like EC2,VPC,RDS,ELB, and more.
+   
+     #### Infrastructure Setup:
+
+    - **AWS Environment:** Configured with VPC, subnets, security groups.
+
+
+## Additional Notes
+
+- This deployment process is designed for educational purposes and can be modified for production environments.
+- Refer to individual sections for detailed instructions on each step.
 
