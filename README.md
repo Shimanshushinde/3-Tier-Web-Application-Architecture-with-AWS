@@ -1,5 +1,5 @@
-# Deploying a 3-Tier Web Application Architecture With AWS
-Deploying a three-tier web application on AWS involves setting up three layers: presentation (frontend), logic tier (backend), and data tier (database).
+# Deployment of 3-Tier Web Application Architecture With AWS
+Deployment of three-tier web application on AWS involves setting up three layers: presentation (frontend), logic tier (backend), and data tier (database).
 This guide to deploying such an application on AWS using commonly used services like EC2,VPC,RDS,ELB, and more.
 
 # Architecture of the Project
