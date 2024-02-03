@@ -42,6 +42,17 @@ This base network consists of:
      - A new or existing key pair
    - create a new security group with inbound SSH, HTTP, and HTTPS rules.
    - Under ‘Advanced details >[User Data](https://github.com/Shimanshushinde/3-Tier-Web-Application-Architecture-with-AWS/blob/e687d4a2beda1a7585e19ee079ef285c3787610e/User%20Data)
+     ```sh
+     #!/bin/bash
+
+     #install apache
+     sudo yum -y install httpd
+
+     #enable and start apache
+     sudo systemctl enable httpd
+     sudo systemctl start httpd
+     ```
+
 
 2. **Create an Auto scaling group (ASG)**
    - Navigate to the ASG console, select "Launch Template" and create a new group.
@@ -90,7 +101,7 @@ This base network consists of:
    - Add inbound AND outbound rules that allow MySQL requests to and from the application servers on port 3306.
    - Do the same for the AppServer-SG.
 
-### STEP 5: Test Your Application
+### Step 5: Test Your Application
 1. **Use SSH Connection To Connect To The Web Server**
    - SSH into our EC2 server, with public ip and keypair.
   
