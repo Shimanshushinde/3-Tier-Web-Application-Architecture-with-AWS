@@ -96,15 +96,33 @@ This base network consists of:
    - Add inbound AND outbound rules that allow MySQL requests to and from the application servers on port 3306.
    - Do the same for the AppServer-SG.
 
-
 ### STEP 5: Test Your Application
 1. **Use SSH Connection To Connect To The Web Server**
-   - SSH into our EC2 server, use putty as ssh client.(Remember, this is the ‘Presentation’ layer, where our users will directly interact with our app.)
+   - SSH into our EC2 server, with public ip and keypair.
   
-    ```sh
-        ssh -i "webServer_key.ppk" ec2-user@ec2-54-209-250-120.compute-1.amazonaws.com
-        ```
-     - Ping the private IP address of one of the app server EC2s.
-         ```
-         ping PRIVATE_IPV4_ADDRESS
-         ```
+     ```sh
+     ssh -i <KEY_PAIR_NAME> ec2-user@<PUBLIC_IPV4_ADDRESS>
+     ```
+   - Upload keypair to server and change permission.
+     ```
+     vi <KEY_PAIR_NAME>
+     ```
+     ```
+     Chmod 400 <KEY_PAIR_NAME>
+     ```
+   - Ping the private IP address of one of the app server EC2s.
+     ```
+     ping <PRIVATE_IPV4_ADDRESS>
+     ```
+2. **Connect To Application Server In A Private Subnet From Web Server**
+   
+     ```
+     ssh -i <KEY_PAIR_NAME> ec2-user@<PRIVATE_IPV4_ADDRESS>
+     ```
+3. **Connect to the Database From App Server**
+
+   ```
+   mysql -h <YOUR_DB_ENDPOINT> -P 3306 -u <YOUR_DB_USERNAME> -p
+   ```
+**We successfully connected to our database from our application server!**
+
